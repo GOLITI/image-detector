@@ -1,0 +1,200 @@
+{% extends 'detector/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    
+    <!-- En-tête -->
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-4xl font-bold mb-2">📚 Historique des analyses</h1>
+            <p class="text-base-content/60">Consultez les 20 dernières analyses effectuées</p>
+        </div>
+        <a href="{% url 'detector:index' %}" class="btn btn-primary gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            Nouvelle analyse
+        </a>
+    </div>
+    
+    {% if analyses %}
+    
+    <!-- Statistiques rapides -->
+    <div class="stats stats-vertical lg:stats-horizontal shadow mb-8 w-full">
+        <div class="stat">
+            <div class="stat-figure text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+            </div>
+            <div class="stat-title">Total d'analyses</div>
+            <div class="stat-value text-primary">{{ analyses|length }}</div>
+            <div class="stat-desc">Dans les 20 dernières</div>
+        </div>
+        
+        <div class="stat">
+            <div class="stat-figure text-success">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <div class="stat-title">Images identiques</div>
+            <div class="stat-value text-success">
+                {{ analyses|length }}
+            </div>
+            <div class="stat-desc">Aucune falsification</div>
+        </div>
+        
+        <div class="stat">
+            <div class="stat-figure text-info">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+            </div>
+            <div class="stat-title">Temps moyen</div>
+            <div class="stat-value text-info">
+                {% widthratio analyses.0.analysis_duration 1 1 %}s
+            </div>
+            <div class="stat-desc">Par analyse</div>
+        </div>
+    </div>
+    
+    <!-- Liste des analyses -->
+    <div class="space-y-4">
+        {% for analysis in analyses %}
+        <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
+            <div class="card-body">
+                <div class="flex flex-col lg:flex-row gap-6">
+                    
+                   <!-- Miniatures des images -->
+                    <div class="flex gap-4 lg:w-1/3">
+                        <div class="avatar">
+                            <div class="w-24 h-24 rounded">
+                                <img src="{{ analysis.image1.url }}" alt="Image 1" class="object-cover">
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-base-content/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </div>
+                        <div class="avatar">
+                            <div class="w-24 h-24 rounded">
+                                <img src="{{ analysis.image2.url }}" alt="Image 2" class="object-cover">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Informations de l'analyse -->
+                    <div class="flex-1">
+                        <div class="flex flex-wrap items-center gap-3 mb-3">
+                            <h2 class="card-title">Analyse #{{ analysis.id }}</h2>
+                            <div class="badge badge-{{ analysis.get_verdict_display_color }} gap-2">
+                                {{ analysis.get_verdict_icon }} {{ analysis.get_verdict_display }}
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                            <div>
+                                <p class="text-base-content/60">Date</p>
+                                <p class="font-semibold">{{ analysis.created_at|date:"d/m/Y" }}</p>
+                                <p class="text-xs">{{ analysis.created_at|date:"H:i" }}</p>
+                            </div>
+
+                            <div>
+                                <p class="text-base-content/60">Score SSIM</p>
+                                <p class="font-semibold text-primary">{{ analysis.ssim_score|floatformat:3 }}</p>
+                            </div>
+
+                            <div>
+                                <p class="text-base-content/60">Similarité</p>
+                                <p class="font-semibold text-secondary">{{ analysis.similarity_percentage|floatformat:1 }}%</p>
+                            </div>
+
+                            <div>
+                                <p class="text-base-content/60">Durée</p>
+                                <p class="font-semibold">{{ analysis.analysis_duration }}s</p>
+                            </div>
+                        </div>
+
+                        <!-- Barre de progression de similarité -->
+                        <div class="mt-4">
+                            <div class="flex justify-between text-xs mb-1">
+                                <span>Similarité</span>
+                                <span>{{ analysis.similarity_percentage|floatformat:1 }}%</span>
+                            </div>
+                            <progress class="progress progress-primary w-full" value="{{ analysis.similarity_percentage }}" max="100"></progress>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex lg:flex-col gap-2 justify-center">
+                        <a href="{% url 'detector:results' analysis.id %}" class="btn btn-primary btn-sm gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            Voir
+                        </a>
+
+                        <form method="post" action="{% url 'detector:delete' analysis.id %}" onsubmit="return confirm('Supprimer cette analyse ?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-error btn-outline btn-sm gap-2 w-full">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                                Suppr.
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+
+    <!-- État vide -->
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body items-center text-center py-16">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-base-content/30 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <h2 class="text-2xl font-bold mb-2">Aucune analyse pour le moment</h2>
+            <p class="text-base-content/60 mb-6">Commencez par analyser vos premières images !</p>
+            <a href="{% url 'detector:index' %}" class="btn btn-primary btn-lg gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Commencer une analyse
+            </a>
+        </div>
+    </div>
+
+    {% endif %}
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Animation d'apparition des cartes
+    document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.card');
+
+        cards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+
+            setTimeout(() => {
+                card.style.transition = 'all 0.5s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+    });
+</script>
+{% endblock %}

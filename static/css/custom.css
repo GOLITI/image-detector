@@ -1,0 +1,382 @@
+/* Styles personnalisés pour le détecteur de falsification */
+
+/* Variables globales */
+:root {
+    --primary-color: #3b82f6;
+    --secondary-color: #8b5cf6;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --error-color: #ef4444;
+    --transition-speed: 0.3s;
+}
+
+/* Animations globales */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Drop zones */
+.drop-zone {
+    position: relative;
+    transition: all var(--transition-speed) ease;
+    cursor: pointer;
+}
+
+.drop-zone:hover {
+    border-color: var(--primary-color);
+    background-color: rgba(59, 130, 246, 0.05);
+    transform: translateY(-2px);
+}
+
+.drop-zone.drag-over {
+    border-color: var(--primary-color) !important;
+    background-color: rgba(59, 130, 246, 0.1) !important;
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+.drop-zone input[type="file"] {
+    display: none;
+}
+
+/* Preview images */
+.preview-image {
+    max-height: 400px;
+    width: 100%;
+    object-fit: contain;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform var(--transition-speed) ease;
+}
+
+.preview-image:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+/* Loader */
+.loader {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: var(--primary-color);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Progress bars avec animation */
+.progress {
+    transition: all 1s ease-in-out;
+}
+
+/* Badges personnalisés */
+.badge {
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+}
+
+/* Cards avec effet hover */
+.card {
+    transition: all var(--transition-speed) ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Alert personnalisées */
+.alert {
+    animation: slideIn 0.5s ease;
+}
+
+/* Boutons avec effet */
+.btn {
+    transition: all var(--transition-speed) ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn:active {
+    transform: scale(0.95);
+}
+
+/* Navbar avec effet glassmorphism */
+.navbar {
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Footer */
+.footer {
+    margin-top: 4rem;
+}
+
+/* Responsive images */
+@media (max-width: 768px) {
+    .preview-image {
+        max-height: 250px;
+    }
+
+    .drop-zone {
+        padding: 2rem 1rem;
+    }
+}
+
+/* Hash display avec effet de copie */
+.font-mono {
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+}
+
+.font-mono:hover {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: var(--primary-color);
+}
+
+/* Tooltip custom */
+.tooltip-custom {
+    animation: fadeIn 0.3s ease;
+    pointer-events: none;
+}
+
+/* Stats cards */
+.stats .stat {
+    padding: 1.5rem;
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+}
+
+/* Collapse animation */
+.collapse-content {
+    transition: all 0.3s ease;
+}
+
+/* Image comparison slider (optionnel pour future amélioration) */
+.image-comparison {
+    position: relative;
+    overflow: hidden;
+}
+
+.image-comparison img {
+    display: block;
+    width: 100%;
+}
+
+/* Heatmap legend */
+.heatmap-legend {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 1rem;
+}
+
+.heatmap-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Loading skeleton */
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.06) 25%,
+        rgba(0, 0, 0, 0.15) 50%,
+        rgba(0, 0, 0, 0.06) 75%
+    );
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Toast notifications */
+.toast {
+    z-index: 9999;
+}
+
+/* Smooth scroll */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Selection color */
+::selection {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Focus styles */
+*:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+    .navbar,
+    .footer,
+    .btn,
+    .dropdown {
+        display: none;
+    }
+
+    .card {
+        break-inside: avoid;
+    }
+}
+
+/* Dark mode adjustments (si DaisyUI dark theme est activé) */
+[data-theme="dark"] .drop-zone {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] .drop-zone:hover {
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* Accessibility improvements */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Animations pour les résultats */
+@keyframes resultAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.result-card {
+    animation: resultAppear 0.5s ease;
+}
+
+/* Badge animation */
+@keyframes badgePulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.badge-animated {
+    animation: badgePulse 2s infinite;
+}
+
+
+/* Motif de grille pour l'arrière-plan */
+.bg-grid-pattern {
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+/* Gradient text */
+.bg-clip-text {
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Amélioration des badges */
+.badge-lg {
+    font-size: 0.875rem;
+    padding: 0.75rem 1.25rem;
+    font-weight: 600;
+}
+
+/* Animation pour les stats */
+.stat {
+    animation: fadeIn 0.5s ease;
+}
+
+/* Bordure animée */
+@keyframes borderGlow {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+    }
+}
+
+.card:hover {
+    animation: borderGlow 2s infinite;
+}

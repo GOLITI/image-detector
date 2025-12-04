@@ -1,0 +1,234 @@
+
+{% extends 'detector/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    
+   <!-- Hero Section -->
+<div class="hero bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 rounded-3xl shadow-2xl mb-8 overflow-hidden relative">
+    <div class="absolute inset-0 bg-grid-pattern opacity-5"></div>
+    <div class="hero-content text-center py-16 relative z-10">
+        <div class="max-w-3xl">
+            <div class="mb-6 flex justify-center">
+                <div class="relative">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-primary animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                    <div class="absolute -top-2 -right-2 w-6 h-6 bg-success rounded-full animate-ping"></div>
+                </div>
+            </div>
+
+            <h1 class="text-6xl font-extrabold mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                ImageGuard
+            </h1>
+
+            <p class="text-2xl mb-4 font-semibold text-base-content/80">
+                Vérifiez l'authenticité de vos images en quelques secondes
+            </p>
+
+            <p class="text-lg mb-8 text-base-content/60 max-w-2xl mx-auto">
+                Notre technologie avancée d'analyse d'images détecte instantanément toute modification ou falsification.
+                Protégez-vous contre les manipulations numériques et assurez l'intégrité de vos contenus visuels.
+            </p>
+
+            <div class="flex gap-4 justify-center flex-wrap mb-6">
+                <div class="stat bg-base-100/50 backdrop-blur rounded-2xl shadow-lg p-4">
+                    <div class="stat-figure text-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <div class="stat-title text-sm">Analyse</div>
+                    <div class="stat-value text-primary text-2xl">Ultra-rapide</div>
+                </div>
+
+                <div class="stat bg-base-100/50 backdrop-blur rounded-2xl shadow-lg p-4">
+                    <div class="stat-figure text-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div class="stat-title text-sm">Précision</div>
+                    <div class="stat-value text-secondary text-2xl">99.9%</div>
+                </div>
+
+                <div class="stat bg-base-100/50 backdrop-blur rounded-2xl shadow-lg p-4">
+                    <div class="stat-figure text-accent">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </div>
+                    <div class="stat-title text-sm">Sécurité</div>
+                    <div class="stat-value text-accent text-2xl">Maximum</div>
+                </div>
+            </div>
+
+            <div class="flex gap-3 justify-center flex-wrap text-sm">
+                <div class="badge badge-lg badge-primary gap-2 shadow-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    Intelligence Artificielle
+                </div>
+                <div class="badge badge-lg badge-secondary gap-2 shadow-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    Cryptographie Avancée
+                </div>
+                <div class="badge badge-lg badge-accent gap-2 shadow-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    Analyse Structurelle
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Instructions améliorées -->
+<div class="bg-gradient-to-r from-info/20 to-info/10 rounded-2xl shadow-lg mb-8 border-l-4 border-info">
+    <div class="p-6">
+        <div class="flex items-start gap-4">
+            <div class="flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-info" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <div class="flex-1">
+                <h3 class="text-2xl font-bold mb-3 text-info">Comment ça fonctionne ?</h3>
+                <div class="grid md:grid-cols-3 gap-4 text-sm">
+                    <div class="flex items-start gap-3 bg-base-100/50 p-4 rounded-xl">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-content flex items-center justify-center font-bold">1</div>
+                        <div>
+                            <h4 class="font-semibold mb-1">Téléchargez</h4>
+                            <p class="text-base-content/70">Glissez-déposez ou sélectionnez deux images à comparer (JPG, PNG, BMP, TIFF - max 10 MB)</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3 bg-base-100/50 p-4 rounded-xl">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-secondary text-secondary-content flex items-center justify-center font-bold">2</div>
+                        <div>
+                            <h4 class="font-semibold mb-1">Analysez</h4>
+                            <p class="text-base-content/70">Notre algorithme examine chaque détail pour détecter les modifications invisibles à l'œil nu</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3 bg-base-100/50 p-4 rounded-xl">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-accent text-accent-content flex items-center justify-center font-bold">3</div>
+                        <div>
+                            <h4 class="font-semibold mb-1">Résultats</h4>
+                            <p class="text-base-content/70">Obtenez un rapport détaillé avec visualisation des zones modifiées et score de confiance</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- Instructions -->
+    <div class="alert alert-info shadow-lg mb-8">
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current flex-shrink-0 w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <div>
+                <h3 class="font-bold">Comment ça marche ?</h3>
+                <div class="text-sm">
+                    1. Téléchargez deux images (formats: JPG, PNG, BMP, TIFF - max 10 MB)<br>
+                    2. Cliquez sur "Analyser les images"<br>
+                    3. Découvrez si les images sont identiques ou falsifiées
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Formulaire d'upload -->
+    <form method="post" enctype="multipart/form-data" id="upload-form" class="space-y-6">
+        {% csrf_token %}
+        
+        <div class="grid md:grid-cols-2 gap-6">
+            
+            <!-- Zone d'upload Image 1 -->
+            <div class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title text-primary">📷 Image 1</h2>
+                    
+                    <!-- Preview -->
+                    <div id="preview1" class="hidden mb-4">
+                        <img id="preview-img1" src="" alt="Aperçu Image 1" class="preview-image rounded-lg w-full">
+                    </div>
+                    
+                    <!-- Drop Zone -->
+                    <div class="drop-zone border-2 border-dashed border-base-300 rounded-lg p-8 text-center cursor-pointer hover:border-primary transition-all"
+                         id="drop-zone1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-base-content/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
+                        <p class="text-lg font-semibold mb-2">Glissez une image ici</p>
+                        <p class="text-sm text-base-content/60 mb-4">ou cliquez pour sélectionner</p>
+                        {{ form.image1 }}
+                    </div>
+                    
+                    <div class="text-xs text-base-content/60 mt-2">
+                        Formats acceptés: JPG, PNG, BMP, TIFF (max 10 MB)
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Zone d'upload Image 2 -->
+            <div class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title text-secondary">📷 Image 2</h2>
+                    
+                    <!-- Preview -->
+                    <div id="preview2" class="hidden mb-4">
+                        <img id="preview-img2" src="" alt="Aperçu Image 2" class="preview-image rounded-lg w-full">
+                    </div>
+                    
+                    <!-- Drop Zone -->
+                    <div class="drop-zone border-2 border-dashed border-base-300 rounded-lg p-8 text-center cursor-pointer hover:border-secondary transition-all"
+                         id="drop-zone2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-base-content/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
+                        <p class="text-lg font-semibold mb-2">Glissez une image ici</p>
+                        <p class="text-sm text-base-content/60 mb-4">ou cliquez pour sélectionner</p>
+                        {{ form.image2 }}
+                    </div>
+                    
+                    <div class="text-xs text-base-content/60 mt-2">
+                        Formats acceptés: JPG, PNG, BMP, TIFF (max 10 MB)
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <!-- Bouton d'analyse -->
+        <div class="text-center">
+            <button type="submit" id="analyze-btn" class="btn btn-primary btn-lg gap-2" disabled>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                Analyser les images
+            </button>
+            
+            <!-- Loader (caché par défaut) -->
+            <div id="loader" class="hidden mt-4">
+                <div class="flex items-center justify-center gap-3">
+                    <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"></div>
+                    <span class="text-lg">Analyse en cours...</span>
+                </div>
+            </div>
+        </div>
+        
+    </form>
+    
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/upload.js' %}"></script>
+{% endblock %}

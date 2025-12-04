@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ page_title|default:"Détecteur de Falsification" }}{% endblock %}</title>
+
+    <!-- Tailwind CSS + DaisyUI via CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.19/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom CSS -->
+    <style>
+        .drop-zone {
+            transition: all 0.3s ease;
+        }
+        .drop-zone.drag-over {
+            border-color: #3b82f6;
+            background-color: #dbeafe;
+            transform: scale(1.02);
+        }
+        .preview-image {
+            max-height: 400px;
+            object-fit: contain;
+        }
+        .loader {
+            border-top-color: #3b82f6;
+            animation: spinner 1.5s linear infinite;
+        }
+        @keyframes spinner {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* CORRECTIONS POUR LE MENU MOBILE */
+        .navbar-end {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Amélioration de la visibilité du menu mobile */
+        .dropdown-content {
+            background-color: white !important;
+        }
+
+        .dropdown-content a {
+            color: #1f2937 !important;
+            font-weight: 500;
+            padding: 0.75rem 1rem;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f3f4f6 !important;
+            color: #3b82f6 !important;
+        }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-base-200">
+
+    <!-- Navbar -->
+    <div class="navbar bg-gradient-to-r from-primary to-secondary text-primary-content shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto">
+            <div class="navbar-start">
+                <a href="{% url 'detector:index' %}" class="btn btn-ghost text-xl hover:scale-105 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                    <span class="font-bold text-2xl">ImageGuard</span>
+                </a>
+            </div>
+            <div class="navbar-center hidden lg:flex">
+                <ul class="menu menu-horizontal px-1 gap-2">
+                    <li>
+                        <a href="{% url 'detector:index' %}" class="btn btn-ghost hover:bg-white/20">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                            </svg>
+                            Accueil
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'detector:history' %}" class="btn btn-ghost hover:bg-white/20">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Historique
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="navbar-end">
+                <div class="dropdown dropdown-end lg:hidden">
+                    <label tabindex="0" class="btn btn-ghost btn-circle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </label>
+                    <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-lg rounded-box w-52">
+                        <li><a href="{% url 'detector:index' %}">Accueil</a></li>
+                        <li><a href="{% url 'detector:history' %}">Historique</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Messages Django -->
+    {% if messages %}
+    <div class="container mx-auto px-4 mt-4">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags|default:'info' }} shadow-lg mb-4">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>{{ message }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Contenu principal -->
+    <main class="container mx-auto px-4 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+   <!-- Footer -->
+    <footer class="footer footer-center p-10 bg-gradient-to-r from-base-300 to-base-200 text-base-content mt-16">
+        <div class="grid grid-flow-col gap-4">
+            <a href="{% url 'detector:index' %}" class="link link-hover">Accueil</a>
+            <a href="{% url 'detector:history' %}" class="link link-hover">Historique</a>
+            <a href="#" class="link link-hover">À propos</a>
+            <a href="#" class="link link-hover">Contact</a>
+        </div>
+        <div>
+            <div class="grid grid-flow-col gap-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+            </div>
+        </div>
+        <div>
+            <p class="font-bold text-lg">ImageGuard</p>
+            <p>Solution professionnelle de détection de falsification d'images</p>
+            <p class="text-sm text-base-content/60 mt-2">
+                Propulsé par l'intelligence artificielle • Sécurité maximale • Résultats instantanés
+            </p>
+            <p class="text-xs text-base-content/40 mt-4">
+                © 2025 ImageGuard. Tous droits réservés.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    {% block extra_js %}{% endblock %}
+
+</body>
+</html>

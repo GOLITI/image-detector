@@ -1,0 +1,277 @@
+{% extends 'detector/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    
+    <!-- Bouton retour -->
+    <div class="mb-6">
+        <a href="{% url 'detector:index' %}" class="btn btn-ghost gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Nouvelle analyse
+        </a>
+    </div>
+    
+    <!-- Titre et informations -->
+    <div class="card bg-base-100 shadow-xl mb-8">
+        <div class="card-body">
+            <h1 class="card-title text-3xl mb-4">
+                📊 Résultats de l'analyse #{{ analysis.id }}
+            </h1>
+            <div class="flex flex-wrap gap-4 text-sm">
+                <div class="badge badge-outline gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {{ analysis.created_at|date:"d/m/Y H:i" }}
+                </div>
+                <div class="badge badge-outline gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    Analysé en {{ analysis.analysis_duration }}s
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Verdict principal -->
+    <div class="alert alert-{{ analysis.get_verdict_display_color }} shadow-xl mb-8 text-lg">
+        <div class="flex-1">
+            <div class="text-4xl mr-4">{{ analysis.get_verdict_icon }}</div>
+            <div>
+                <h3 class="font-bold text-2xl mb-2">{{ analysis.get_verdict_display }}</h3>
+                <p class="text-base">{{ verdict_message }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Comparaison visuelle des images -->
+    <div class="grid md:grid-cols-2 gap-6 mb-8">
+        
+        <!-- Image 1 -->
+        <div class="card bg-base-100 shadow-xl">
+            <figure class="px-4 pt-4">
+                <img src="{{ analysis.image1.url }}" alt="Image 1" class="rounded-xl max-h-96 object-contain w-full">
+            </figure>
+            <div class="card-body">
+                <h2 class="card-title text-primary">📷 Image 1</h2>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="font-semibold">Hash MD5:</span>
+                    </div>
+                    <div class="bg-base-200 p-2 rounded font-mono text-xs break-all">
+                        {{ analysis.md5_hash1 }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Image 2 -->
+        <div class="card bg-base-100 shadow-xl">
+            <figure class="px-4 pt-4">
+                <img src="{{ analysis.image2.url }}" alt="Image 2" class="rounded-xl max-h-96 object-contain w-full">
+            </figure>
+            <div class="card-body">
+                <h2 class="card-title text-secondary">📷 Image 2</h2>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="font-semibold">Hash MD5:</span>
+                    </div>
+                    <div class="bg-base-200 p-2 rounded font-mono text-xs break-all">
+                        {{ analysis.md5_hash2 }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <!-- Métriques détaillées -->
+    <div class="grid md:grid-cols-3 gap-6 mb-8">
+
+        <!-- Score de confiance -->
+        <div class="card bg-gradient-to-br from-primary/10 to-primary/5 shadow-xl border border-primary/20">
+            <div class="card-body">
+                <h3 class="card-title text-lg flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    Score de Confiance
+                </h3>
+                <div class="text-center py-4">
+                    <div class="text-5xl font-bold text-primary mb-2">
+                        {{ analysis.ssim_score|floatformat:3 }}
+                    </div>
+                    <div class="text-sm text-base-content/60">sur 1.000</div>
+                </div>
+                <progress class="progress progress-primary" value="{{ analysis.ssim_score|floatformat:2 }}" max="1"></progress>
+                <p class="text-xs text-base-content/60 mt-2">
+                    Indice de fiabilité de l'analyse comparative des images
+                </p>
+            </div>
+        </div>
+
+        <!-- Pourcentage d'authenticité -->
+        <div class="card bg-gradient-to-br from-secondary/10 to-secondary/5 shadow-xl border border-secondary/20">
+            <div class="card-body">
+                <h3 class="card-title text-lg flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Taux d'Authenticité
+                </h3>
+                <div class="text-center py-4">
+                    <div class="text-5xl font-bold text-secondary mb-2">
+                        {{ analysis.similarity_percentage|floatformat:1 }}%
+                    </div>
+                    <div class="text-sm text-base-content/60">de correspondance</div>
+                </div>
+                <progress class="progress progress-secondary" value="{{ analysis.similarity_percentage }}" max="100"></progress>
+                <p class="text-xs text-base-content/60 mt-2">
+                    Degré de correspondance globale entre les deux images
+                </p>
+            </div>
+        </div>
+
+        <!-- Vérification d'intégrité -->
+        <div class="card bg-gradient-to-br from-accent/10 to-accent/5 shadow-xl border border-accent/20">
+            <div class="card-body">
+                <h3 class="card-title text-lg flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    Vérification d'Intégrité
+                </h3>
+                <div class="text-center py-4">
+                    {% if analysis.md5_hash1 == analysis.md5_hash2 %}
+                        <div class="text-5xl mb-2">✓</div>
+                        <div class="text-xl font-bold text-success">Validée</div>
+                    {% else %}
+                        <div class="text-5xl mb-2">⚠</div>
+                        <div class="text-xl font-bold text-warning">Différences détectées</div>
+                    {% endif %}
+                </div>
+                <p class="text-xs text-base-content/60 mt-2">
+                    Contrôle d'intégrité cryptographique au niveau binaire
+                </p>
+            </div>
+        </div>
+
+    </div>
+    
+    <!-- Carte de différence -->
+    {% if analysis.difference_map %}
+    <div class="card bg-base-100 shadow-xl mb-8">
+        <div class="card-body">
+            <h2 class="card-title text-2xl mb-4">🗺️ Carte des différences</h2>
+            <p class="text-sm text-base-content/60 mb-4">
+                Cette heatmap met en évidence les zones qui diffèrent entre les deux images.
+                Les zones en rouge/jaune indiquent des différences significatives.
+            </p>
+            <figure class="rounded-xl overflow-hidden">
+                <img src="{{ analysis.difference_map.url }}" alt="Carte des différences" class="w-full">
+            </figure>
+            <div class="flex justify-between items-center mt-4 text-xs">
+                <div class="flex items-center gap-2">
+                    <div class="w-4 h-4 bg-blue-500 rounded"></div>
+                    <span>Zones identiques</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="w-4 h-4 bg-yellow-500 rounded"></div>
+                    <span>Différences modérées</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="w-4 h-4 bg-red-500 rounded"></div>
+                    <span>Différences importantes</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Interprétation des résultats -->
+    <div class="card bg-base-100 shadow-xl mb-8">
+        <div class="card-body">
+            <h2 class="card-title text-2xl mb-4">💡 Interprétation des résultats</h2>
+            
+            <div class="space-y-4">
+                <div class="collapse collapse-arrow bg-base-200">
+                    <input type="checkbox" checked /> 
+                    <div class="collapse-title text-lg font-medium">
+                        Que signifie le score SSIM ?
+                    </div>
+                    <div class="collapse-content text-sm"> 
+                        <p>Le SSIM (Structural Similarity Index) mesure la similarité structurelle entre deux images en comparant la luminance, le contraste et la structure.</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1">
+                            <li><strong>SSIM ≥ 0.95</strong> : Images très similaires</li>
+                            <li><strong>0.80 ≤ SSIM < 0.95</strong> : Images similaires avec quelques différences</li>
+                            <li><strong>SSIM < 0.80</strong> : Images significativement différentes</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="collapse collapse-arrow bg-base-200">
+                    <input type="checkbox" /> 
+                    <div class="collapse-title text-lg font-medium">
+                        Pourquoi le MD5 est-il important ?
+                    </div>
+                    <div class="collapse-content text-sm"> 
+                        <p>Le hash MD5 est une empreinte cryptographique unique d'un fichier. Si deux fichiers ont le même hash MD5, ils sont identiques bit par bit.</p>
+                        <p class="mt-2">Même une modification minuscule (un seul pixel, les métadonnées) changera complètement le hash MD5.</p>
+                    </div>
+                </div>
+                
+                <div class="collapse collapse-arrow bg-base-200">
+                    <input type="checkbox" /> 
+                    <div class="collapse-title text-lg font-medium">
+                        Comment interpréter la carte de différence ?
+                    </div>
+                    <div class="collapse-content text-sm"> 
+                        <p>La carte de différence utilise des couleurs pour montrer où les images diffèrent :</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1">
+                            <li><strong>Bleu/Vert</strong> : Zones identiques ou très similaires</li>
+                            <li><strong>Jaune/Orange</strong> : Différences modérées</li>
+                            <li><strong>Rouge</strong> : Différences importantes ou zones modifiées</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Actions -->
+    <div class="flex gap-4 justify-center flex-wrap">
+        <a href="{% url 'detector:index' %}" class="btn btn-primary btn-lg gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            Nouvelle analyse
+        </a>
+        
+        <a href="{% url 'detector:history' %}" class="btn btn-outline btn-lg gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Voir l'historique
+        </a>
+        
+        <form method="post" action="{% url 'detector:delete' analysis.id %}" class="inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette analyse ?');">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-error btn-outline btn-lg gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                Supprimer
+            </button>
+        </form>
+    </div>
+    
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/results.js' %}"></script>
+{% endblock %}
