@@ -58,11 +58,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Gestion du clic sur la drop zone pour ouvrir le sélecteur
-    dropZone1.addEventListener('click', function() {
+    dropZone1.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
         image1Input.click();
     });
 
-    dropZone2.addEventListener('click', function() {
+    dropZone2.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
         image2Input.click();
     });
 

@@ -2,6 +2,7 @@ import time
 from django.core.files.base import ContentFile
 from .hash_calculator import HashCalculator
 from .image_processor import ImageProcessor
+from .ai_detector import AIForgeryDetector
 
 
 class ForgeryDetector:
@@ -85,8 +86,36 @@ class ForgeryDetector:
                     ContentFile(heatmap_buffer.read()),
                     save=False
                 )
+                
+                # 9. Analyse par Intelligence Artificielle
+                print("Analyse IA des images...")
+                try:
+                    ai_detector = AIForgeryDetector()
+                    ai_results = ai_detector.analyze_image_pair(
+                        analysis_instance.image1.path,
+                        analysis_instance.image2.path
+                    )
+                    
+                    # Sauvegarder la carte IA
+                    if 'visualization' in ai_results and ai_results['visualization'] is not None:
+                        ai_map_buffer = ImageProcessor.save_image_to_bytes(
+                            ai_results['visualization'], format='PNG'
+                        )
+                        analysis_instance.ai_difference_map.save(
+                            f'ai_map_{analysis_instance.id}.png',
+                            ContentFile(ai_map_buffer.read()),
+                            save=False
+                        )
+                    
+                    # Sauvegarder le score et les détails
+                    analysis_instance.ai_confidence_score = ai_results.get('confidence_score', 0)
+                    analysis_instance.ai_analysis_details = ai_results.get('details', {})
+                    print(f"Analyse IA terminée - Score: {analysis_instance.ai_confidence_score:.2f}")
+                except Exception as e:
+                    print(f"Avertissement: Analyse IA échouée - {str(e)}")
+                    # L'analyse continue sans l'IA
 
-            # 9. Enregistrer la durée de l'analyse
+            # 10. Enregistrer la durée de l'analyse
             end_time = time.time()
             analysis_instance.analysis_duration = round(end_time - start_time, 2)
 

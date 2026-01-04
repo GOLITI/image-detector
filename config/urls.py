@@ -6,6 +6,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('detector.urls')),
+    # API REST
+    path('api/v1/', include('api.urls')),
 ]
 
 # Servir les fichiers médias en développement

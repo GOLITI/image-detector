@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.utils import timezone
 import os
 
@@ -20,6 +21,12 @@ def upload_to_image2(instance, filename):
 def upload_to_difference_map(instance, filename):
     """Chemin pour la carte de différence"""
     filename = f"diff_map_{timezone.now().strftime('%Y%m%d_%H%M%S')}.png"
+    return os.path.join('results', filename)
+
+
+def upload_to_ai_map(instance, filename):
+    """Chemin pour la carte IA"""
+    filename = f"ai_map_{timezone.now().strftime('%Y%m%d_%H%M%S')}.png"
     return os.path.join('results', filename)
 
 
@@ -53,10 +60,68 @@ class ImageAnalysis(models.Model):
         blank=True,
         verbose_name="Carte des différences"
     )
+    
+    # Carte IA (analyse par intelligence artificielle)
+    ai_difference_map = models.ImageField(
+        upload_to=upload_to_ai_map,
+        null=True,
+        blank=True,
+        verbose_name="Carte IA des manipulations"
+    )
+    ai_confidence_score = models.FloatField(
+        null=True,
+        blank=True,
+        verbose_name="Score de confiance IA"
+    )
+    ai_analysis_details = models.JSONField(
+        null=True,
+        blank=True,
+        verbose_name="Détails de l'analyse IA"
+    )
 
     # Métadonnées
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Date de création")
     analysis_duration = models.FloatField(null=True, blank=True, verbose_name="Durée de l'analyse (s)")
+    
+    # Relations avec l'utilisateur et l'organisation
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='analyses',
+        null=True,
+        blank=True,
+        verbose_name="Utilisateur"
+    )
+    
+    category = models.ForeignKey(
+        'api.Category',
+        on_delete=models.SET_NULL,
+        related_name='analyses',
+        null=True,
+        blank=True,
+        verbose_name="Catégorie"
+    )
+    
+    tags = models.ManyToManyField(
+        'api.Tag',
+        related_name='analyses',
+        blank=True,
+        verbose_name="Tags"
+    )
+    
+    batch = models.ForeignKey(
+        'api.BatchAnalysis',
+        on_delete=models.CASCADE,
+        related_name='analyses',
+        null=True,
+        blank=True,
+        verbose_name="Lot d'analyse"
+    )
+    
+    # Champs supplémentaires
+    title = models.CharField(max_length=200, blank=True, verbose_name="Titre")
+    notes = models.TextField(blank=True, verbose_name="Notes")
+    is_favorite = models.BooleanField(default=False, verbose_name="Favori")
 
     class Meta:
         verbose_name = "Analyse d'image"

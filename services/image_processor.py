@@ -106,7 +106,10 @@ class ImageProcessor:
     @staticmethod
     def generate_difference_map(img1, img2, diff):
         """
-        Génère une carte de différence colorée (heatmap)
+        Génère une carte de différence avec couleurs simples sur l'image visible :
+        - VERT semi-transparent = zones identiques
+        - ROUGE semi-transparent = zones différentes
+        L'image reste clairement visible en dessous.
 
         Args:
             img1: Première image
@@ -114,21 +117,41 @@ class ImageProcessor:
             diff: Image de différence (niveaux de gris)
 
         Returns:
-            numpy.ndarray: Carte de différence colorée
+            numpy.ndarray: Image avec overlay de différences colorées
         """
-        # Inverser la différence pour que les zones différentes soient plus claires
-        diff_inverted = 255 - diff
-
-        # Appliquer une colormap (rouge pour les différences)
-        heatmap = cv2.applyColorMap(diff_inverted, cv2.COLORMAP_JET)
-
-        # Fusionner avec l'image originale pour mieux voir
-        # Utiliser la première image comme base
-        img1_resized, _ = ImageProcessor.resize_images_to_same_size(img1, img2)
-
-        # Superposer la heatmap (50% opacité)
-        result = cv2.addWeighted(img1_resized, 0.5, heatmap, 0.5, 0)
-
+        # Redimensionner les images si nécessaire
+        img1_resized, img2_resized = ImageProcessor.resize_images_to_same_size(img1, img2)
+        if diff.shape[:2] != img1_resized.shape[:2]:
+            diff = cv2.resize(diff, (img1_resized.shape[1], img1_resized.shape[0]))
+        
+        # Créer une copie de l'image originale comme base
+        result = img1_resized.copy()
+        
+        # Créer un overlay coloré
+        overlay = img1_resized.copy()
+        
+        # Définir les seuils pour les différences
+        # diff élevé = similaire (SSIM proche de 1), diff bas = différent
+        threshold_identical = 200  # Très similaire
+        threshold_different = 100  # Différent
+        
+        # Créer les masques
+        mask_identical = diff >= threshold_identical
+        mask_different = diff <= threshold_different
+        mask_moderate = (diff > threshold_different) & (diff < threshold_identical)
+        
+        # Appliquer les couleurs (BGR format)
+        # Vert pour les zones identiques
+        overlay[mask_identical] = [0, 200, 0]  # Vert
+        # Rouge pour les zones différentes  
+        overlay[mask_different] = [0, 0, 220]  # Rouge
+        # Orange pour les différences modérées
+        overlay[mask_moderate] = [0, 165, 255]  # Orange
+        
+        # Fusionner avec l'image originale (30% overlay, 70% original)
+        # Cela garde l'image bien visible tout en montrant les différences
+        result = cv2.addWeighted(img1_resized, 0.7, overlay, 0.3, 0)
+        
         return result
 
     @staticmethod
